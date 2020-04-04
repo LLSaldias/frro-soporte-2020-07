@@ -2,8 +2,10 @@
 
 
 def maximo(a, b):
-    pass
+    return a if a > b else b
+
 
 # si no falla es porque esta bien
 assert maximo(10, 5) == 10
 assert maximo(9, 18) == 18
+
