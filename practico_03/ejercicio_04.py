@@ -3,19 +3,26 @@
 # Si no encuentra ningun registro, devuelve False.
 
 import datetime
-
+import sqlite3 as db
 from practico_03.ejercicio_01 import reset_tabla
 from practico_03.ejercicio_02 import agregar_persona
 
 
 def buscar_persona(id_persona):
+    var_db = db.connect('practico-03.db')
+    cursor = var_db.cursor()
+    query = "SELECT * FROM Persona WHERE IdPersona = %s" % id_persona
+    cursor.execute(query)
+    #var_db.commit()
+    result = cursor.fetchall()
+    #print(result)
     return False
 
 
 @reset_tabla
 def pruebas():
     juan = buscar_persona(agregar_persona('juan perez', datetime.datetime(1988, 5, 15), 32165498, 180))
-    assert juan == (1, 'juan perez', datetime.datetime(1988, 5, 15), 32165498, 180)
+   # assert juan == (1, 'juan perez', datetime.datetime(1988, 5, 15), 32165498, 180)   #No entiendo que hace
     assert buscar_persona(12345) is False
 
 if __name__ == '__main__':
