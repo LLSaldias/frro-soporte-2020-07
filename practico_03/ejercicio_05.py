@@ -2,14 +2,22 @@
 # Devuelve un booleano en base a si encontro el registro y lo actualizo o no.
 
 import datetime
-
+import sqlite3 as db
 from practico_03.ejercicio_01 import reset_tabla
 from practico_03.ejercicio_02 import agregar_persona
 from practico_03.ejercicio_04 import buscar_persona
 
 
 def actualizar_persona(id_persona, nombre, nacimiento, dni, altura):
-    return False
+    var_db = db.connect('practico-03.db')
+    cursor = var_db.cursor()
+    query = "UPDATE Persona SET Nombre = %s,  DNI = %s, altura = %s WHERE IdPersona = %s" #%id_persona %nombre %dni %altura
+    val = (nombre,nacimiento,dni,altura, id_persona)
+    #cursor.execute(query)
+    cursor.execute(query, val)
+    #var_db.commit()
+    # print(result)
+    return False if cursor.rowcount == 0 else True
 
 
 @reset_tabla

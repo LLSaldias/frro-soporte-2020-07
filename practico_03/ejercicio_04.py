@@ -16,13 +16,13 @@ def buscar_persona(id_persona):
     #var_db.commit()
     result = cursor.fetchall()
     #print(result)
-    return False
+    return False if cursor.rowcount == 0 else True
 
 
 @reset_tabla
 def pruebas():
     juan = buscar_persona(agregar_persona('juan perez', datetime.datetime(1988, 5, 15), 32165498, 180))
-   # assert juan == (1, 'juan perez', datetime.datetime(1988, 5, 15), 32165498, 180)   #No entiendo que hace
+    assert juan == (1, 'juan perez', datetime.datetime(1988, 5, 15), 32165498, 180)   #No entiendo que hace
     assert buscar_persona(12345) is False
 
 if __name__ == '__main__':
