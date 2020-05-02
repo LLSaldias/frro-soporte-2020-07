@@ -16,7 +16,7 @@ def buscar_persona(id_persona):
     #var_db.commit()
     result = cursor.fetchall()
     #print(result)
-    return False if cursor.rowcount == 0 else True
+    return False if cursor.rowcount == 0 else result
 
 
 @reset_tabla
