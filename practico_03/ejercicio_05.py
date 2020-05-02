@@ -11,12 +11,11 @@ from practico_03.ejercicio_04 import buscar_persona
 def actualizar_persona(id_persona, nombre, nacimiento, dni, altura):
     var_db = db.connect('practico-03.db')
     cursor = var_db.cursor()
-    query = "UPDATE Persona SET Nombre = %s,  DNI = %s, altura = %s WHERE IdPersona = %s" #%id_persona %nombre %dni %altura
-    val = (nombre,nacimiento,dni,altura, id_persona)
-    #cursor.execute(query)
-    cursor.execute(query, val)
+    naci = str(nacimiento)
+    query = "UPDATE Persona SET Nombre = \"%s\", FechaNacimiento = datetime(\"%s\") ,DNI = %i, altura = %i WHERE IdPersona = %i" %(nombre,naci,dni,altura,id_persona )
+    print(query)
+    cursor.execute(query)
     #var_db.commit()
-    # print(result)
     return False if cursor.rowcount == 0 else True
 
 

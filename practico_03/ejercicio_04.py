@@ -13,9 +13,8 @@ def buscar_persona(id_persona):
     cursor = var_db.cursor()
     query = "SELECT * FROM Persona WHERE IdPersona = %s" % id_persona
     cursor.execute(query)
-    #var_db.commit()
     result = cursor.fetchall()
-    #print(result)
+    var_db.commit()
     return False if cursor.rowcount == 0 else result
 
 
