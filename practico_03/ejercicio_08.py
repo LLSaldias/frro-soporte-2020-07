@@ -15,15 +15,26 @@
 # - False en caso de no cumplir con alguna validacion.
 
 import datetime
-
+import sqlite3 as db
 from practico_03.ejercicio_02 import agregar_persona
 from practico_03.ejercicio_06 import reset_tabla
 from practico_03.ejercicio_07 import agregar_peso
+from practico_03.ejercicio_04 import buscar_persona
 
 
 def listar_pesos(id_persona):
-    return []
-
+    db_var = db.connect('practico-03.db')
+    cursor = db_var.cursor()
+    persona = buscar_persona(id_persona)
+    if persona:
+        sql = '''SELECT date(Fecha), Peso FROM Peso WHERE IdPersona = ?'''
+        query_data = (id_persona,)
+        result = cursor.execute(sql, query_data).fetchall()
+        cursor.close()
+        db_var.close()
+        return result if result else False
+    else:
+        return False
 
 @reset_tabla
 def pruebas():
@@ -38,7 +49,6 @@ def pruebas():
     assert pesos_juan == pesos_esperados
     # id incorrecto
     assert listar_pesos(200) == False
-
 
 if __name__ == '__main__':
     pruebas()
