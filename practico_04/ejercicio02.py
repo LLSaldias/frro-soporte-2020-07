@@ -2,7 +2,7 @@
 ## y las operaciones + - / * = , que al apretar cada botón vaya agregando al valor que muestra en el entry el carácter 
 ## que le corresponde ( como se ve imagen ) y cuando se aprieta en = pone el resultado de evaluar la cadena entrada . 
 
-
+## Bibliografia: https://www.youtube.com/watch?v=0KmcgQoaiwA
 
 
 from tkinter import *
