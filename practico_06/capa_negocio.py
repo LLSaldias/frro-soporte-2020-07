@@ -17,7 +17,6 @@ class MaximoAlcanzado(Exception):
 
 
 class NegocioSocio(object):
-
     MIN_CARACTERES = 3
     MAX_CARACTERES = 15
     MAX_SOCIOS = 200
@@ -27,79 +26,87 @@ class NegocioSocio(object):
 
     def buscar(self, id_socio):
         """
-        Devuelve la instancia del socio, dado su id.
-        Devuelve None si no encuentra nada.
-        :rtype: Socio
+        :return: Socio | None
         """
-        return
+        return self.datos.buscar(id_socio)
 
     def buscar_dni(self, dni_socio):
         """
-        Devuelve la instancia del socio, dado su dni.
-        Devuelve None si no encuentra nada.
-        :rtype: Socio
+        :return: Socio | None
         """
-        return
+        return self.datos.buscar_dni(dni_socio)
 
     def todos(self):
         """
-        Devuelve listado de todos los socios.
-        :rtype: list
+        :return: list
         """
-        return []
+        return self.datos.todos()
 
-    def alta(self, socio):
+    def alta(self, socio: Socio):
         """
-        Da de alta un socio.
-        Se deben validar las 3 reglas de negocio primero.
-        Si no validan, levantar la excepcion correspondiente.
-        Devuelve True si el alta fue exitoso.
-        :type socio: Socio
-        :rtype: bool
+        Si se cumplen las validaciones se agrega un socios.
+        :return: Boolean
         """
-        return False
+        if (self.regla_1(socio) and self.regla_2(socio) and self.regla_3()):
+            self.datos.alta(socio)
+            return True
+        else:
+            return None
 
     def baja(self, id_socio):
         """
-        Borra el socio especificado por el id.
-        Devuelve True si el borrado fue exitoso.
-        :rtype: bool
+        :return: Boolean
         """
+        toDelete = self.buscar(id_socio)
+        if toDelete is None:
+            return False
+        return self.datos.baja(id_socio)
+
+    def modificacion(self, socio : Socio):
+        """
+        Si las validaciones son exitosas modifica al socio.
+        :return: Boolean
+        """
+        if self.regla_2(socio) and (self.datos.modificacion(socio) is not None):
+            return True
         return False
 
-    def modificacion(self, socio):
-        """
-        Modifica un socio.
-        Se debe validar la regla 2 primero.
-        Si no valida, levantar la excepcion correspondiente.
-        Devuelve True si la modificacion fue exitosa.
-        :type socio: Socio
-        :rtype: bool
-        """
-        return False
+    def resetTabla(self):
+        self.base.drop_all(self.engine)
 
-    def regla_1(self, socio):
+    def regla_1(self, socio : Socio):
         """
-        Validar que el DNI del socio es unico (que ya no este usado).
-        :type socio: Socio
-        :raise: DniRepetido
-        :return: bool
+        valida que el dni sea unico
+        :raise: Se repite DNI
+        :return: Boolean
         """
-        return False
+        # tengo q comprobar si el buscar_dni funciona correctamente y dps si encuentra el socio_repe
+        socio_repe = self.buscar_dni(socio.dni)
+        if socio_repe == None:
+            return True
+        else:
+            # levanto excepcion
+            raise DniRepetido('Dni ya registrado')
 
-    def regla_2(self, socio):
+    def regla_2(self, socio : Socio):
         """
-        Validar que el nombre y el apellido del socio cuenten con mas de 3 caracteres pero menos de 15.
-        :type socio: Socio
-        :raise: LongitudInvalida
-        :return: bool
+        valida la longitud del nombre y apellido 3 < Len < 15
+        :raise: Longitud incorrecta
+        :return: Boolean
         """
-        return False
+        if (len(socio.nombre) < self.MIN_CARACTERES or len(socio.nombre) > self.MAX_CARACTERES):
+            raise LongitudInvalida('ERROR: el nombre debe tener entre 3 y 15 caracteres.')
+        elif (len(socio.apellido) < self.MIN_CARACTERES or len(socio.apellido) > self.MAX_CARACTERES):
+            raise LongitudInvalida('ERROR: el apellido debe tener entre 3 y 15 caracteres.')
+        return True
 
     def regla_3(self):
         """
-        Validar que no se esta excediendo la cantidad maxima de socios.
+        Validar que no se exceda la cantidad de socios.
         :raise: MaximoAlcanzado
         :return: bool
         """
-        return False
+        if len(self.datos.todos()) > self.MAX_SOCIOS:
+            raise MaximoAlcanzado('ERROR: ah superado el numero de socios maximo')
+        else:
+            return True
