@@ -80,13 +80,11 @@ class NegocioSocio(object):
         :raise: Se repite DNI
         :return: Boolean
         """
-        # tengo q comprobar si el buscar_dni funciona correctamente y dps si encuentra el socio_repe
         socio_repe = self.buscar_dni(socio.dni)
         if socio_repe == None:
             return True
         else:
-            # levanto excepcion
-            raise DniRepetido('Dni ya registrado')
+            raise DniRepetido('El DNI ya se ha utilizado')
 
     def regla_2(self, socio : Socio):
         """
